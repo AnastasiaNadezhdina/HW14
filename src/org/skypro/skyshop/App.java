@@ -10,7 +10,7 @@ import org.skypro.skyshop.product.FixPriceProduct;
 
 public class App {
     public static void main (String [] args){
-        Product product1 = new SimpleProduct("Хлеб", 65);
+        Product product1 = new SimpleProduct("Батон", 65);
         Product product2 = new SimpleProduct("Молоко", 209);
         Product product3 = new DiscountedProduc("Сметана", 95, 15);
         Product product4 = new DiscountedProduc("Колбаса", 185, 25);
