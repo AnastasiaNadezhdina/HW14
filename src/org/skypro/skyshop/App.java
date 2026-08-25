@@ -1,21 +1,19 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.product.DiscountedProduc;
-import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
-import org.skypro.skyshop.product.SimpleProduct;
-import org.skypro.skyshop.product.FixPriceProduct;
-
-
+import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.article.Article;
+import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
 
 public class App {
-    public static void main (String [] args){
-        Product product1 = new SimpleProduct("Батон", 65);
-        Product product2 = new SimpleProduct("Молоко", 209);
-        Product product3 = new DiscountedProduc("Сметана", 95, 15);
-        Product product4 = new DiscountedProduc("Колбаса", 185, 25);
-        Product product5 = new FixPriceProduct("Квас");
-        Product product6 = new FixPriceProduct("Творог");
+    public static void main (String [] args) {
+        Product product1 = new org.skypro.skyshop.product.SimpleProduct("Батон", 65);
+        Product product2 = new org.skypro.skyshop.product.SimpleProduct("Молоко", 209);
+        Product product3 = new org.skypro.skyshop.product.DiscountedProduc("Сметана", 95, 15);
+        Product product4 = new org.skypro.skyshop.product.DiscountedProduc("Колбаса", 185, 25);
+        Product product5 = new org.skypro.skyshop.product.FixPriceProduct("Квас");
+        Product product6 = new org.skypro.skyshop.product.FixPriceProduct("Творог");
 
         ProductBasket basket = new ProductBasket();
         basket.addProduct(product1);
@@ -24,16 +22,40 @@ public class App {
         basket.addProduct(product4);
         basket.addProduct(product5);
         basket.addProduct(product6);
-
         basket.printBasket();
-
         System.out.println("Общая стоимость корзины: " + basket.getTotalPrice());
         System.out.println("Молоко " + basket.containsProductByName("Молоко"));
         System.out.println("Сушки " + basket.containsProductByName("Сушки"));
-
         basket.clear();
         basket.printBasket();
         System.out.println("Общая стоимость: " + basket.getTotalPrice());
         System.out.println("Молоко " + basket.containsProductByName("Молоко"));
+
+        // Создаём статьи
+        Article a1 = new Article("Польза молока", "Молоко содержит кальций и витамины.");
+        Article a2 = new Article("Как выбрать хлеб", "Советы по выбору свежего хлеба.");
+        // Поисковый движок
+        SearchEngine se = new SearchEngine(10);
+        se.add(product1);
+        se.add(product2);
+        se.add(product3);
+        se.add(product4);
+        se.add(product5);
+        se.add(product6);
+        se.add(a1);
+        se.add(a2);
+        // Демонстрация поиска
+        System.out.println("\nРезультаты поиска 'Молоко':");
+        Searchable[] found = se.search("Молоко");
+        for (Searchable s : found) {
+            if (s != null) System.out.println(s.getStringRepresentation());
+        }
+        System.out.println("\nРезультаты поиска 'хлеб':");
+        found = se.search("хлеб");
+        for (Searchable s : found) {
+            if (s != null) System.out.println(s.getStringRepresentation());
+        }
     }
 }
+
+
