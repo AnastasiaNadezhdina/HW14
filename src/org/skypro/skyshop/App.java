@@ -1,13 +1,34 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.Product;
-import org.skypro.skyshop.article.Article;
-import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 public class App {
-    public static void main (String [] args) {
+    public static void main (String [] args) throws IllegalAccessException {
+
+        try {
+            Product p1 = new org.skypro.skyshop.product.SimpleProduct("   ", 100);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product p2 = new org.skypro.skyshop.product.SimpleProduct("Молоко", 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product p3 = new org.skypro.skyshop.product.DiscountedProduc("Сметана", 90, -5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product p4 = new org.skypro.skyshop.product.DiscountedProduc("Сыр", 80, 101);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+
         Product product1 = new org.skypro.skyshop.product.SimpleProduct("Батон", 65);
         Product product2 = new org.skypro.skyshop.product.SimpleProduct("Молоко", 209);
         Product product3 = new org.skypro.skyshop.product.DiscountedProduc("Сметана", 95, 15);
@@ -35,7 +56,7 @@ public class App {
         Article a1 = new Article("Польза молока", "Молоко содержит кальций и витамины.");
         Article a2 = new Article("Как выбрать хлеб", "Советы по выбору свежего хлеба.");
         // Поисковый движок
-        SearchEngine se = new SearchEngine(10);
+        org.skypro.skyshop.search.SearchEngine se = new org.skypro.skyshop.search.SearchEngine(10);
         se.add(product1);
         se.add(product2);
         se.add(product3);
@@ -45,15 +66,18 @@ public class App {
         se.add(a1);
         se.add(a2);
         // Демонстрация поиска
-        System.out.println("\nРезультаты поиска 'Молоко':");
-        Searchable[] found = se.search("Молоко");
-        for (Searchable s : found) {
-            if (s != null) System.out.println(s.getStringRepresentation());
+        try{
+            Searchable best = se.findBest("Молоко");
+            System.out.println("Лучший результат: " + best.getStringRepresentation());
+        } catch (org.skypro.skyshop.search.BestResultNotFound e) {
+            System.out.println(e.getMessage());
         }
-        System.out.println("\nРезультаты поиска 'хлеб':");
-        found = se.search("хлеб");
-        for (Searchable s : found) {
-            if (s != null) System.out.println(s.getStringRepresentation());
+        // Поиск без результата
+        try {
+            Searchable best = se.findBest("несуществующее слово");
+            System.out.println("Лучший результат: " + best.getStringRepresentation());
+        } catch (org.skypro.skyshop.search.BestResultNotFound e) {
+            System.out.println(e.getMessage());
         }
     }
 }
