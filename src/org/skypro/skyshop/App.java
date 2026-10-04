@@ -5,6 +5,8 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.search.Searchable;
 
+import java.util.List;
+
 public class App {
     public static void main (String [] args) throws IllegalAccessException {
 
@@ -52,11 +54,30 @@ public class App {
         System.out.println("Общая стоимость: " + basket.getTotalPrice());
         System.out.println("Молоко " + basket.containsProductByName("Молоко"));
 
+
+        List<Product> removed = basket.removeByName("Молоко");
+        System.out.println("Удалённые продукты:");
+        if (removed.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            for (Product p : removed) System.out.println(p);
+        }
+        basket.printBasket();
+
+        List<Product> removed2 = basket.removeByName("Сушки");
+        System.out.println("Попытка удалить 'Сушки':");
+        if (removed2.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            for (Product p : removed2) System.out.println(p);
+        }
+        basket.printBasket();
+
         // Создаём статьи
         Article a1 = new Article("Польза молока", "Молоко содержит кальций и витамины.");
         Article a2 = new Article("Как выбрать хлеб", "Советы по выбору свежего хлеба.");
         // Поисковый движок
-        org.skypro.skyshop.search.SearchEngine se = new org.skypro.skyshop.search.SearchEngine(10);
+        org.skypro.skyshop.search.SearchEngine se = new org.skypro.skyshop.search.SearchEngine();
         se.add(product1);
         se.add(product2);
         se.add(product3);
@@ -66,7 +87,18 @@ public class App {
         se.add(a1);
         se.add(a2);
         // Демонстрация поиска
-        try{
+        System.out.println("\nРезультаты поиска 'Молоко':");
+        List<Searchable> found = se.search("Молоко");
+        for (Searchable s : found) {
+            System.out.println(s.getStringRepresentation());
+        }
+        System.out.println("\nРезультаты поиска 'хлеб':");
+        found = se.search("хлеб");
+        for (Searchable s : found) {
+            System.out.println(s.getStringRepresentation());
+        }
+        // Лучший результат
+        try {
             Searchable best = se.findBest("Молоко");
             System.out.println("Лучший результат: " + best.getStringRepresentation());
         } catch (org.skypro.skyshop.search.BestResultNotFound e) {

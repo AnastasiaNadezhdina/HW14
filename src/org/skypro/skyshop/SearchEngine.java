@@ -1,35 +1,29 @@
 package org.skypro.skyshop.search;
 
-public class SearchEngine {
-    private final Searchable[] items;
-    private int size = 0;
+import java.util.ArrayList;
+import java.util.List;
 
-    public SearchEngine(int capacity) {
-        this.items = new Searchable[capacity];
-    }
+public class SearchEngine {
+    private final List<Searchable> items = new ArrayList<>();
 
     public void add(Searchable s) {
-        if (size < items.length) {
-            items[size++] = s;
-        }
+        items.add(s);
     }
 
-    public Searchable[] search(String query) {
-        Searchable[] result = new Searchable[5];
-        int found = 0;
+    public List<Searchable> search(String query) {
+        List<Searchable> result = new ArrayList<>();
         for (Searchable s : items) {
-            if (s != null && s.getSearchTerm().contains(query)) {
-                result[found++] = s;
-                if (found >= 5) break;
+            if (s.getSearchTerm().contains(query)) {
+                result.add(s);
             }
         }
         return result;
     }
+
     public Searchable findBest(String search) throws BestResultNotFound {
         Searchable best = null;
         int maxCount = 0;
         for (Searchable s : items) {
-            if (s == null) continue;
             int count = countOccurrences(s.getSearchTerm(), search);
             if (count > maxCount) {
                 maxCount = count;
