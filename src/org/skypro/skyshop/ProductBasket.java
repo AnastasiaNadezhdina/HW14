@@ -1,23 +1,23 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
+import java.util.*;
 
 public class ProductBasket {
-    private final List<Product> products = new ArrayList<>();
+    private final Map<String, List<Product>> products = new HashMap<>();
 
 
     public void addProduct(Product product) {
-        products.add(product);
+        products.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
     }
 
     public int getTotalPrice() {
         int sum = 0;
-        for (Product p : products) {
+        for (List<Product> productList : products.values()) {
+            for (Product p : productList) {
                 sum += p.getPrice();
-
+            }
         }
         return sum;
     }
@@ -27,10 +27,10 @@ public class ProductBasket {
             System.out.println("в корзине пусто");
         } else {
             int specialCount = 0;
-            for (Product p : products) {
+            for (List<Product> productList : products.values()) {
+                for (Product p : productList) {
                 System.out.println(p.toString());
-                if (p.isSpecial()) {
-                    specialCount++;
+                if (p.isSpecial()) specialCount++;
                 }
             }
             System.out.println("Итого: " + getTotalPrice());
@@ -39,12 +39,8 @@ public class ProductBasket {
     }
 
     public boolean containsProductByName(String name) {
-        for (Product p : products) {
-            if (p.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        List<Product> list = products.get(name);
+        return list != null && !list.isEmpty();
     }
 
     public void clear() {
@@ -52,20 +48,10 @@ public class ProductBasket {
     }
 
     public List<Product> removeByName(String name) {
-        List<Product> removed = new ArrayList<>();
-        Iterator<Product> it = products.iterator();
-        while (it.hasNext()) {
-            Product p = it.next();
-            if (p.getName().equals(name)) {
-                removed.add(p);
-                it.remove();
-            }
-        }
-        return removed;
+        List<Product> removed = products.remove(name);
+        return removed != null ? removed : Collections.emptyList();
     }
 }
-//    @Override
-//    public String toString() {
-//        return "Общая стоимость корзины: " + getTotalPrice();
-//    }
+
+
 

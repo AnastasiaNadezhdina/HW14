@@ -6,6 +6,8 @@ import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class App {
     public static void main (String [] args) throws IllegalAccessException {
@@ -88,14 +90,14 @@ public class App {
         se.add(a2);
         // Демонстрация поиска
         System.out.println("\nРезультаты поиска 'Молоко':");
-        List<Searchable> found = se.search("Молоко");
-        for (Searchable s : found) {
-            System.out.println(s.getStringRepresentation());
+        Map found = se.search("Молоко");
+        for (Object entry : found.entrySet()) {
+            System.out.println(entry.getClass().toString());
         }
         System.out.println("\nРезультаты поиска 'хлеб':");
         found = se.search("хлеб");
-        for (Searchable s : found) {
-            System.out.println(s.getStringRepresentation());
+        for (Object entry : found.entrySet()) {
+            System.out.println(entry.getClass().toString());
         }
         // Лучший результат
         try {
