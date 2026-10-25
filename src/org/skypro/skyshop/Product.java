@@ -14,6 +14,7 @@ public abstract class Product implements Searchable {
    }
 
 
+   @Override
    public String getName() {
       return name;
    }
@@ -32,4 +33,17 @@ public abstract class Product implements Searchable {
    public abstract int getPrice();
    @Override
    public abstract String toString();
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Product product = (Product) o;
+      return name.equals(product.name);
+   }
+
+   @Override
+   public int hashCode() {
+      return name.hashCode();
+   }
 }

@@ -6,8 +6,8 @@ import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+
 
 public class App {
     public static void main (String [] args) throws IllegalAccessException {
@@ -57,21 +57,21 @@ public class App {
         System.out.println("Молоко " + basket.containsProductByName("Молоко"));
 
 
-        List<Product> removed = basket.removeByName("Молоко");
+        List removed = basket.removeByName("Молоко");
         System.out.println("Удалённые продукты:");
         if (removed.isEmpty()) {
             System.out.println("Список пуст");
         } else {
-            for (Product p : removed) System.out.println(p);
+            for (Object p : removed) System.out.println(p);
         }
         basket.printBasket();
 
-        List<Product> removed2 = basket.removeByName("Сушки");
+        List removed2 = basket.removeByName("Сушки");
         System.out.println("Попытка удалить 'Сушки':");
         if (removed2.isEmpty()) {
             System.out.println("Список пуст");
         } else {
-            for (Product p : removed2) System.out.println(p);
+            for (Object p : removed2) System.out.println(p);
         }
         basket.printBasket();
 
@@ -90,14 +90,15 @@ public class App {
         se.add(a2);
         // Демонстрация поиска
         System.out.println("\nРезультаты поиска 'Молоко':");
-        Map found = se.search("Молоко");
-        for (Object entry : found.entrySet()) {
-            System.out.println(entry.getClass().toString());
+        Set<Searchable> found = se.search("Молоко");
+        for (Searchable s : found) {
+            System.out.println(s.getStringRepresentation());
         }
+
         System.out.println("\nРезультаты поиска 'хлеб':");
         found = se.search("хлеб");
-        for (Object entry : found.entrySet()) {
-            System.out.println(entry.getClass().toString());
+        for (Searchable s : found) {
+            System.out.println(s.getStringRepresentation());
         }
         // Лучший результат
         try {
