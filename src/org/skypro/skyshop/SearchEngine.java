@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
     private final Set<Searchable> items = new HashSet<>();
@@ -18,13 +19,9 @@ public class SearchEngine {
             if (cmp != 0) return cmp;
             return a.getName().compareTo(b.getName()); // если длина равна, по алфавиту
         };
-        Set<Searchable> result = new TreeSet<>(comparator);
-        for (Searchable s : items) {
-            if (s.getSearchTerm().contains(query)) {
-                result.add(s);
-            }
-        }
-        return result;
+        return items.stream()
+                .filter(s -> s.getSearchTerm().contains(query))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(comparator)));
     }
 
     public org.skypro.skyshop.search.Searchable findBest(String search) throws BestResultNotFound {
